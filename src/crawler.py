@@ -1,6 +1,5 @@
 import requests
 import pandas as pd
-from tqdm import tqdm   # 진행률 표시용
 from datetime import datetime, timedelta
 import pymysql
 
@@ -22,7 +21,7 @@ headers = {
     "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8"
 }
 
-for date in tqdm(date_list):
+for date in date_list:
     params = {
         "bld": "dbms/MDC/STAT/standard/MDCSTAT03901",
         "mktId": "STK", # KOSPI
