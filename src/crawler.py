@@ -2,6 +2,7 @@ import requests
 import pandas as pd
 from datetime import datetime, timedelta
 import pymysql
+import os
 
 # # For crawling data within the specified date range
 # start_date = datetime(2025, 1, 1)
@@ -53,24 +54,42 @@ if not full_df.empty:
     sector_df = full_df.groupby(['DATE', 'IDX_IND_NM'])['MKTCAP'].sum().reset_index()
     sector_df = sector_df.sort_values(['DATE', 'MKTCAP'], ascending=[True, False])
 
-# 데이터베이스에 연결
-db = pymysql.connect(
-    host = 'localhost',
-    port = 3306,
-    user = 'root',
-    passwd = 'Psw98!!2',
-    db = 'kospi_sector_trend'
-)
-cursor = db.cursor()
+# # 데이터베이스에 연결
+# db = pymysql.connect(
+#     host = 'localhost',
+#     port = 3306,
+#     user = 'root',
+#     passwd = 'Psw98!!2',
+#     db = 'kospi_sector_trend'
+# )
+# cursor = db.cursor()
 
-# 데이터베이스에 삽입
-for _, row in sector_df.iterrows():
-    sql = '''
-    INSERT INTO KRX_sector_mktcap (date, sector_name, market_cap)
-    VALUES (%s, %s, %s)
-    ON DUPLICATE KEY UPDATE market_cap = VALUES(market_cap)
-    '''
-    cursor.execute(sql, (row['DATE'], row['IDX_IND_NM'], row['MKTCAP']))
+# # 데이터베이스에 삽입
+# for _, row in sector_df.iterrows():
+#     sql = '''
+#     INSERT INTO KRX_sector_mktcap (date, sector_name, market_cap)
+#     VALUES (%s, %s, %s)
+#     ON DUPLICATE KEY UPDATE market_cap = VALUES(market_cap)
+#     '''
+#     cursor.execute(sql, (row['DATE'], row['IDX_IND_NM'], row['MKTCAP']))
 
-db.commit()
-db.close()
+# db.commit()
+# db.close()
+
+excel_file = 'data/KRX_sector_mktcap.xlsx'
+
+if not full_df.empty:
+    if os.path.exists(excel_file):
+        existing_data = pd.read_excel(excel_file)
+        combined_data = pd.concat([existing_data, full_df], ignore_index=True)
+        combined_data = combined_data.drop_duplicates(subset=['DATE', 'IDX_IND_NM'])
+    else:
+        combined_data = full_df
+    combined_data.to_excel(excel_file, index=False)
+    print(f"{len(sector_df)} rows appended to {excel_file}")
+else:
+    print("No data to append today.")
+
+# Excel로 저장 (기존 파일 덮어쓰기)
+combined_data.to_excel(excel_file, index=False)
+print(f"{len(full_df)} rows appended to {excel_file}")

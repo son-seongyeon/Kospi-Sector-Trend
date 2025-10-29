@@ -4,3 +4,4 @@ numpy
 openpyxl
 pymysql
 pytest
+os
