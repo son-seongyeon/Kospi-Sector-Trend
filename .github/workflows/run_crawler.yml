@@ -28,54 +28,38 @@
 #         python src/crawler.py
 
 
-name: Kospi-Sector-Trend CI
+name: Run Daily Crawler
 
 on:
-  push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
-
-env:
-  DB_DATABASE: kospi_sector_trend
-  DB_USER: root
-  DB_PASSWORD: root
+  schedule:
+    - cron: '0 9 * * *'   # UTC 09:00 = KST 18:00 매일 실행
+  workflow_dispatch:
 
 jobs:
-  test:
+  run-crawler:
     runs-on: ubuntu-latest
 
+    env:
+      DB_HOST: localhost       # 외부 DB 서버 주소 또는 로컬 호스트
+      DB_PORT: 3306               # MySQL 포트
+      DB_DATABASE: kospi_sector_trend
+      DB_USER: root
+      DB_PASSWORD: Psw98!!2
+
     steps:
-      # 1️⃣ 코드 체크아웃
-      - name: Checkout repository
-        uses: actions/checkout@v3
+    - name: Checkout repository
+      uses: actions/checkout@v4
 
-      # 2️⃣ Python 셋업
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.10'
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.10'
 
-      # 3️⃣ pip 업그레이드
-      - name: Upgrade pip
-        run: python -m pip install --upgrade pip
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
 
-      # 4️⃣ 의존성 설치
-      - name: Install dependencies
-        run: pip install -r requirements.txt
-
-      # 5️⃣ MySQL 시작 및 테스트용 DB 생성
-      - name: Set up MySQL
-        run: |
-          sudo /etc/init.d/mysql start
-          mysql -u${DB_USER} -p${DB_PASSWORD} -e "CREATE DATABASE IF NOT EXISTS ${DB_DATABASE} CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;"
-
-      # 6️⃣ DB 연결 테스트 (선택 사항)
-      - name: Test MySQL Connection
-        run: |
-          mysql -u${DB_USER} -p${DB_PASSWORD} -e "SHOW DATABASES;"
-
-      # 7️⃣ Streamlit 앱 / 테스트 실행
-      - name: Run tests
-        run: |
-          pytest tests/  # 혹은 앱 실행 전에 테스트 스크립트
+    - name: Run crawler
+      run: |
+        python src/crawler.py
