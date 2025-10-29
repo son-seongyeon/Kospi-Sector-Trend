@@ -27,30 +27,16 @@
 #       run: |
 #         python src/crawler.py
 
-
-name: Run Daily Crawler
+name: Run Daily Crawler with H2
 
 on:
   schedule:
-    - cron: '0 9 * * *'   # UTC 09:00 = KST 18:00
+    - cron: '0 9 * * *'
   workflow_dispatch:
 
 jobs:
   run-crawler:
     runs-on: ubuntu-latest
-    services:
-      mysql:
-        image: mysql:8.0
-        env:
-          MYSQL_ROOT_PASSWORD: Psw98!!2
-          MYSQL_DATABASE: kospi_sector_trend
-        ports:
-          - 3306:3306
-        options: >-
-          --health-cmd="mysqladmin ping --silent"
-          --health-interval=10s
-          --health-timeout=5s
-          --health-retries=5
 
     steps:
       - name: Checkout repository
@@ -66,13 +52,7 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: Wait for MySQL
+      - name: Run crawler with H2
         run: |
-          echo "Waiting for MySQL to be ready..."
-          for i in {1..20}; do
-            mysqladmin ping -h 127.0.0.1 -P 3306 -uroot -pPsw98!!2 && break
-            sleep 3
-          done
-
-      - name: Run crawler
-        run: python src/crawler.py
+          export DATABASE_URL="jdbc:h2:mem:kospi?MODE=MYSQL;DB_CLOSE_DELAY=-1"
+          python src/crawler.py
