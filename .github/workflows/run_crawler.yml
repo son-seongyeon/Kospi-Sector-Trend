@@ -37,7 +37,7 @@ jobs:
 
       - name: Run crawler
         env:
-          MYSQL_HOST: mysql          # 서비스 이름
+          MYSQL_HOST: mysql
           MYSQL_PORT: 3306
           MYSQL_USER: root
           MYSQL_PASSWORD: Psw98!!2

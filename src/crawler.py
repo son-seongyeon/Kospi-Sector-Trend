@@ -65,31 +65,20 @@ if not full_df.empty:
 # )
 # cursor = db.cursor()
 
-# 환경변수 가져오기 (GitHub Actions 또는 로컬)
-MYSQL_HOST = os.getenv('MYSQL_HOST', '127.0.0.1')
+
+MYSQL_HOST = os.getenv('MYSQL_HOST', '127.0.0.1')  # localhost가 아니라 mysql
 MYSQL_PORT = int(os.getenv('MYSQL_PORT', 3306))
 MYSQL_USER = os.getenv('MYSQL_USER', 'root')
 MYSQL_PASSWORD = os.getenv('MYSQL_PASSWORD', '')
 MYSQL_DB = os.getenv('MYSQL_DB', 'kospi_sector_trend')
 
-# MySQL 준비될 때까지 최대 50초 대기
-for i in range(10):
-    try:
-        db = pymysql.connect(
-            host=MYSQL_HOST,
-            port=MYSQL_PORT,
-            user=MYSQL_USER,
-            passwd=MYSQL_PASSWORD,
-            db=MYSQL_DB
-        )
-        print("MySQL 연결 성공!")
-        break
-    except pymysql.err.OperationalError as e:
-        print(f"MySQL 연결 실패, 5초 후 재시도: {e}")
-        time.sleep(5)
-else:
-    raise RuntimeError("MySQL이 50초 안에 준비되지 않았습니다.")
-
+db = pymysql.connect(
+    host=MYSQL_HOST,
+    port=MYSQL_PORT,
+    user=MYSQL_USER,
+    passwd=MYSQL_PASSWORD,
+    db=MYSQL_DB
+)
 cursor = db.cursor()
 
 # 데이터베이스에 삽입
