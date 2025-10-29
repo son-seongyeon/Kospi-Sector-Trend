@@ -16,7 +16,7 @@ jobs:
     - name: Set up Python
       uses: actions/setup-python@v5
       with:
-        python-version: '3.10'  # 네가 로컬에서 쓰는 버전 (3.13이면 3.13으로 수정 가능)
+        python-version: '3.10'
 
     - name: Install dependencies
       run: |
