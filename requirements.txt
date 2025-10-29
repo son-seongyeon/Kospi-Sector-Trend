@@ -3,5 +3,3 @@ pandas
 numpy
 openpyxl
 pymysql
-os
-time

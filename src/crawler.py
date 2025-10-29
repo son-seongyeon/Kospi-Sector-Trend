@@ -2,8 +2,6 @@ import requests
 import pandas as pd
 from datetime import datetime, timedelta
 import pymysql
-import os
-import time
 
 # # For crawling data within the specified date range
 # start_date = datetime(2025, 1, 1)
@@ -55,29 +53,13 @@ if not full_df.empty:
     sector_df = full_df.groupby(['DATE', 'IDX_IND_NM'])['MKTCAP'].sum().reset_index()
     sector_df = sector_df.sort_values(['DATE', 'MKTCAP'], ascending=[True, False])
 
-# # 데이터베이스에 연결
-# db = pymysql.connect(
-#     host = 'localhost',
-#     port = 3306,
-#     user = 'root',
-#     passwd = 'Psw98!!2',
-#     db = 'kospi_sector_trend'
-# )
-# cursor = db.cursor()
-
-
-MYSQL_HOST = os.getenv('MYSQL_HOST', '127.0.0.1')  # localhost가 아니라 mysql
-MYSQL_PORT = int(os.getenv('MYSQL_PORT', 3306))
-MYSQL_USER = os.getenv('MYSQL_USER', 'root')
-MYSQL_PASSWORD = os.getenv('MYSQL_PASSWORD', '')
-MYSQL_DB = os.getenv('MYSQL_DB', 'kospi_sector_trend')
-
+# 데이터베이스에 연결
 db = pymysql.connect(
-    host=MYSQL_HOST,
-    port=MYSQL_PORT,
-    user=MYSQL_USER,
-    passwd=MYSQL_PASSWORD,
-    db=MYSQL_DB
+    host = 'localhost',
+    port = 3306,
+    user = 'root',
+    passwd = 'Psw98!!2',
+    db = 'kospi_sector_trend'
 )
 cursor = db.cursor()
 
