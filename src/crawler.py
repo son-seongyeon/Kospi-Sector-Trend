@@ -5,8 +5,8 @@ import pymysql
 import os
 
 # For crawling data within the specified date range
-start_date = datetime(2001, 1, 1)
-end_date = datetime(2001, 1, 31)
+start_date = datetime(2001, 2, 1)
+end_date = datetime(2001, 2, 28)
 date_list = [(start_date + timedelta(days=x)).strftime('%Y%m%d') 
              for x in range((end_date - start_date).days + 1)]
 
@@ -56,7 +56,7 @@ if not full_df.empty:
     sector_df = full_df.groupby(['DATE', 'IDX_IND_NM'])['MKTCAP'].sum().reset_index()
     sector_df = sector_df.sort_values(['DATE', 'MKTCAP'], ascending=[True, False])
 
-file_path = "../data/KRX_sector_mktcap.csv"
+file_path = os.path.join(os.path.dirname(__file__), '../data/KRX_sector_mktcap.csv')
 
 try:
     existing_df = pd.read_csv(file_path)
