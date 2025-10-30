@@ -29,10 +29,10 @@ jobs:
 
     - name: Commit and push updated CSV
       env:
-        GITHUB_TOKEN: ${{ secrets.KOSPI_TOKEN }}
+        GH_TOKEN: ${{ secrets.KOSPI_TOKEN }}
       run: |
         git config --global user.name "son-seongyeon"
         git config --global user.email "passion031028@gmail.com"
-        git add data/KRX_sector_mktcap.csv
+        git add ../data/KRX_sector_mktcap.csv
         git commit -m "Update KRX_sector_mktcap.csv via GitHub Actions" || echo "No changes to commit"
-        git push https://x-access-token:${{ secrets.KOSPI_TOKEN }}@github.com/${{ github.repository }} HEAD:main
+        git push https://x-access-token:${GH_PAT}@github.com/${{ github.repository }} HEAD:main
