@@ -10,7 +10,7 @@ df = pd.read_csv("data/KRX_sector_mktcap.csv")
 st.set_page_config(layout="wide")
 
 # 제목
-st.title("업종별 시가총액 분석")
+st.title("업종별 시가총액 분석 앱")
 st.text("")
 st.text("")
 st.text("")
