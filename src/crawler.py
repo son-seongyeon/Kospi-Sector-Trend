@@ -5,14 +5,14 @@ import pymysql
 import os
 from tqdm import tqdm  # 진행률 표시용
 
-# For crawling data within the specified date range
-start_date = datetime(2021, 1, 1)
-end_date = datetime(2025, 11, 1)
-date_list = [(start_date + timedelta(days=x)).strftime('%Y%m%d') 
-             for x in range((end_date - start_date).days + 1)]
+# # For crawling data within the specified date range
+# start_date = datetime(2023, 1, 1)
+# end_date = datetime(2025, 11, 2)
+# date_list = [(start_date + timedelta(days=x)).strftime('%Y%m%d') 
+#              for x in range((end_date - start_date).days + 1)]
 
-# today = datetime.today().strftime('%Y%m%d')
-# date_list = [today]
+today = datetime.today().strftime('%Y%m%d')
+date_list = [today]
 
 all_data = []
 url = "https://data.krx.co.kr/comm/bldAttendant/getJsonData.cmd"

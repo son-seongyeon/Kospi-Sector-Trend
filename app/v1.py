@@ -151,7 +151,7 @@ elif page == "Page 2: 변동성 계산":
         st.line_chart(ts_df)
 
 
-elif page == "Page 3: Top 5 업종":
+elif page == "Page 3: Top 5 업":
     st.subheader("Top 5 성장 변동성 업종 시각화")
 
     if agg_df.empty:
