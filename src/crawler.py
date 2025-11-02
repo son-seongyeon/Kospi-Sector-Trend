@@ -3,7 +3,6 @@ import pandas as pd
 from datetime import datetime, timedelta
 import pymysql
 import os
-from tqdm import tqdm  # 진행률 표시용
 
 # # For crawling data within the specified date range
 # start_date = datetime(2023, 1, 1)
@@ -23,7 +22,7 @@ headers = {
     "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8"
 }
 
-for date in tqdm(date_list):
+for date in date_list:
     params = {
         "bld": "dbms/MDC/STAT/standard/MDCSTAT03901",
         "mktId": "STK", # KOSPI
