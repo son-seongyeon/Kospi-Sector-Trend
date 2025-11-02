@@ -5,7 +5,7 @@ import numpy as np
 from io import BytesIO
 import plotly.express as px
 
-df = pd.read_csv("../data/KRX_sector_mktcap.csv")
+df = pd.read_csv("data/KRX_sector_mktcap.csv")
 
 st.set_page_config(layout="wide")
 
