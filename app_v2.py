@@ -6,6 +6,12 @@ from io import BytesIO
 import plotly.express as px
 
 df = pd.read_csv("data/KRX_sector_mktcap.csv")
+# 업종별 종목명 리스트
+company_df = pd.read_csv("data/KRX_sector_company.csv")
+
+# '광업' 업종 제외
+df = df[df["IDX_IND_NM"] != "광업"]
+company_df = company_df[company_df["업종명"] != "광업"]
 
 st.set_page_config(layout="wide")
 
@@ -66,6 +72,7 @@ else:
         (df['IDX_IND_NM'] == sector)
     ]
     disparity_df = df[df['IDX_IND_NM'] == sector]
+    company_df = company_df[company_df['업종명'] == sector]
 
 # 헤더 이름 변환
 filtered_df = filtered_df.rename(columns={
@@ -79,6 +86,19 @@ disparity_df = disparity_df.rename(columns={
     "IDX_IND_NM": "SECTOR",
     "MARKET_CAP": "MKTCAP"
 })
+
+# KRX 데이터소스 바로가기
+st.sidebar.markdown(
+    """
+    <div style="position: fixed; bottom: 20px; width: 16rem;">
+        <a href='https://data.krx.co.kr/contents/MDC/MDI/mdiLoader/index.cmd?menuId=MDC0201020505' target='_blank'>
+            KRX 데이터소스 바로가기
+        </a>
+        <br><br>
+    </div>
+    """,
+    unsafe_allow_html=True
+)
 
 # 'Export to Excel' 버튼
 def to_excel(df):
@@ -116,7 +136,7 @@ else:   # '일' 단위
 # 이격도를 위한 데이터프레임
 disparity_df['RATE OF CHANGE'] = round((disparity_df['MKTCAP'] - disparity_df['MKTCAP'].shift(1)) / disparity_df['MKTCAP'].shift(1) * 100)
 
-agg_df['RATE OF CHANGE'] = round((agg_df['MKTCAP'] - agg_df['MKTCAP'].shift(1)) / agg_df['MKTCAP'].shift(1) * 100)
+agg_df['RATE OF CHANGE'] = round((agg_df['MKTCAP'] - agg_df['MKTCAP'].shift(1)) / agg_df['MKTCAP'].shift(1) * 100, 2)
 agg_df['MKTCAP'] = (agg_df['MKTCAP'] / 1e8).astype(int)
 
 
@@ -197,6 +217,19 @@ elif (
     selected_start_date in df['DATE'].values
     and selected_end_date in df['DATE'].values
 ):
+    
+    companies = company_df["종목명"].drop_duplicates().tolist()
+    with st.expander(f"{sector} 업종에 해당되는 종목명"):
+        N = 5
+        for i in range(0, len(companies), N):
+            cols = st.columns(N)
+            for j, col in enumerate(cols):
+                if i + j < len(companies):
+                    col.write(companies[i + j])
+    st.text("")
+    st.text("")
+    st.text("")
+
     agg_df = agg_df.rename(columns={
         'YEAR': '기간단위',
         'MONTH': '기간단위',
@@ -208,6 +241,7 @@ elif (
     })
     agg_df = agg_df.reindex(columns=['업종명', '기간단위', '시가총액 (억)', '변동률 (%)'])
     st.markdown(f"### {sector} 업종 시가총액 변동성 추이")
+
     if agg_df.empty:
         st.markdown("선택하신 기간에 해당하는 데이터가 없습니다.")
     else:
@@ -217,8 +251,16 @@ elif (
     st.text("")
     st.markdown(f"### {sector} 업종 이격도 추이")
 
+    # N일 이격도 라디오버튼
+    num_option = st.radio(
+        "이격도 기준 (일)",
+        options=[20, 50, 100, 150, 200],
+        index=4,
+        horizontal=True
+    )
+
     # 이동평균선
-    disparity_df['MA200'] = disparity_df['MKTCAP'].rolling(window=200).mean()
+    disparity_df['MA200'] = disparity_df['MKTCAP'].rolling(window=num_option).mean()
     # 이격도 (%) = (종가 - MA200) / MA200 * 100
     disparity_df['이격도 %'] = round((disparity_df['MKTCAP'] - disparity_df['MA200']) / disparity_df['MA200'] * 100, 2)
     disparity_df = disparity_df[
