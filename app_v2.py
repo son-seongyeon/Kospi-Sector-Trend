@@ -219,7 +219,7 @@ elif (
 ):
     
     companies = company_df["종목명"].drop_duplicates().tolist()
-    with st.expander(f"{sector} 업종에 해당되는 종목명"):
+    with st.expander(f"{sector} 업종에 해당하는 종목명"):
         N = 5
         for i in range(0, len(companies), N):
             cols = st.columns(N)
