@@ -22,10 +22,6 @@ st.text("")
 st.text("")
 
 # Sidebar
-period_unit = st.sidebar.selectbox(
-    "기간 단위",
-    options=["년", "월", "주", "일"]
-)
 
 # 'DATE' 행 datetime으로 변환
 df['DATE'] = df['DATE'].astype(str)
@@ -37,6 +33,11 @@ default_end_date = df['DATE'].max()
 selected_range = st.sidebar.date_input(
     "기간",
     [default_start_date, default_end_date]
+)
+
+period_unit = st.sidebar.selectbox(
+    "기간 단위",
+    options=["년", "월", "주", "일"]
 )
 
 # Warning
