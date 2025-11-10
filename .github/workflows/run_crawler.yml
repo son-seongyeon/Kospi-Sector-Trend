@@ -25,7 +25,7 @@ jobs:
 
     - name: Run crawler
       run: |
-        python src/crawler.py
+        python src/crawler_mktcap.py
 
     - name: Commit and push updated CSV
       run: |
