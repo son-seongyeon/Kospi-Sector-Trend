@@ -5,8 +5,8 @@ import pymysql
 import os
 
 # # For crawling data within the specified date range
-# start_date = datetime(2023, 1, 1)
-# end_date = datetime(2025, 11, 2)
+# start_date = datetime(2025, 11, 4)
+# end_date = datetime(2025, 11, 10)
 # date_list = [(start_date + timedelta(days=x)).strftime('%Y%m%d') 
 #              for x in range((end_date - start_date).days + 1)]
 
