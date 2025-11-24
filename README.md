@@ -4,9 +4,7 @@
 
 This project provides an interactive Streamlit dashboard for analyzing market capitalization trends across KOSPI sectors. Users can explore sector-level changes over time, review top-performing sectors, analyze disparity metrics, and download filtered datasets. All data is sourced from the Korea Exchange (KRX) and refreshed through automated crawling.
 
-**Live Dashboard:**
-
-https://kospi-sector-trend-lhxhn2hk4qlgkajh6ubgfu.streamlit.app/
+**Live Dashboard:** https://kospi-sector-trend-lhxhn2hk4qlgkajh6ubgfu.streamlit.app/
 
 ## Data Source
 
